@@ -1,5 +1,7 @@
+def loomVersion = findProperty('loom_version') ?: '1.7-SNAPSHOT'
+
 plugins {
-    id 'fabric-loom' version '1.7-SNAPSHOT'
+    id 'fabric-loom' version loomVersion
     id 'java'
 }
 

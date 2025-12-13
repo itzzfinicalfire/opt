@@ -1,7 +1,16 @@
+def loomLocalRepo = System.getenv('LOOM_M2') ?: new File(settingsDir, 'local-plugins').absolutePath
+
 pluginManagement {
     repositories {
-        mavenCentral()
+        if (file(loomLocalRepo).exists()) {
+            maven {
+                name = "LoomLocal"
+                url = uri(loomLocalRepo)
+            }
+        }
+        mavenLocal()
         gradlePluginPortal()
+        mavenCentral()
         maven { url = 'https://maven.fabricmc.net/' }
     }
     resolutionStrategy {

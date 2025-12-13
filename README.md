@@ -42,6 +42,22 @@ gradle build
 
 Artifacts appear in `build/libs/Finicalfirecooldown-<version>.jar`.
 
+### Offline or restricted environments
+
+If your network blocks downloads of the Fabric Loom plugin, you can prime a
+local repository and build offline:
+
+1. Download `fabric-loom-<version>.jar` (matching `loom_version` in
+   `gradle.properties`) from a machine with internet access.
+2. Create a local Maven-style folder at `local-plugins/net/fabricmc/fabric-loom/
+   <version>/` inside this repository and place the jar there with the expected
+   name (e.g., `fabric-loom-1.7-SNAPSHOT.jar`).
+3. Alternatively, point the `LOOM_M2` environment variable to another Maven
+   repository path containing the plugin, or publish it to your `~/.m2` via
+   `mvn install:install-file`.
+4. Run `gradle build --offline` to avoid external fetches once the plugin is in
+   place.
+
 ## Installation
 
 1. Install Fabric Loader (0.16.7+ recommended) and Fabric API matching your
