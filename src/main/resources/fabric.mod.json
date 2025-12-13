@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "finicalfirecooldown",
+  "version": "${version}",
+  "name": "Finicalfirecooldown",
+  "description": "Performance-focused Fabric mod providing automatic low-end presets and dynamic scaling to improve FPS.",
+  "authors": ["AI Assistant"],
+  "contact": {
+    "homepage": "https://example.com",
+    "sources": "https://example.com/repo"
+  },
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.finicalfirecooldown.FinicalfirecooldownClient"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.15.11",
+    "fabric": "*",
+    "minecraft": ["1.20.x"],
+    "java": ">=17"
+  },
+  "suggests": {
+    "sodium": "*",
+    "lithium": "*",
+    "phosphor": "*"
+  }
+}
