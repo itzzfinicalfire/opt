@@ -27,36 +27,37 @@ systems.
 ## Project layout
 
 ```
-- build.gradle / settings.gradle : Fabric Loom configuration for 1.21.4 (Java 21)
+- build.gradle / settings.gradle : Gradle + offline stub configuration
 - src/main/java/com/finicalfirecooldown : Mod sources
+- src/stubs/java : Minimal Fabric/Minecraft/Gson/SLF4J stubs for offline builds
 - src/main/resources/fabric.mod.json : Loader metadata
 ```
 
 ## Building
 
-This repository uses Fabric Loom. Install a recent Gradle (8.x) and run:
+The build defaults to an **offline stub mode** so it can succeed without
+downloading Fabric Loom or Minecraft artifacts. To produce an offline jar:
 
 ```bash
-gradle build
+gradle build -x test
 ```
 
-Artifacts appear in `build/libs/Finicalfirecooldown-<version>.jar`.
+Artifacts appear in `build/libs/Finicalfirecooldown-<version>.jar` along with a
+sources jar.
 
-### Offline or restricted environments
+### Switching to full Fabric dependencies
 
-If your network blocks downloads of the Fabric Loom plugin, you can prime a
-local repository and build offline:
+When internet access is available and you want the real Fabric/Minecraft
+artifacts on the classpath, disable stub mode and let Gradle fetch the official
+dependencies:
 
-1. Download `fabric-loom-<version>.jar` (matching `loom_version` in
-   `gradle.properties`) from a machine with internet access.
-2. Create a local Maven-style folder at `local-plugins/net/fabricmc/fabric-loom/
-   <version>/` inside this repository and place the jar there with the expected
-   name (e.g., `fabric-loom-1.7-SNAPSHOT.jar`).
-3. Alternatively, point the `LOOM_M2` environment variable to another Maven
-   repository path containing the plugin, or publish it to your `~/.m2` via
-   `mvn install:install-file`.
-4. Run `gradle build --offline` to avoid external fetches once the plugin is in
-   place.
+```bash
+gradle build -x test -Poffline_mode=false
+```
+
+Ensure your repositories are reachable (`mavenCentral`, `https://maven.fabricmc.net`,
+and Modrinth). The offline jar includes stub classes for development only; use
+the online build for runtime testing inside Minecraft.
 
 ## Installation
 
