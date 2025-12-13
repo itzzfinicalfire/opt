@@ -14,6 +14,13 @@ repositories {
     mavenCentral()
     maven { url = 'https://maven.fabricmc.net/' }
     maven { url = 'https://jitpack.io' }
+    maven {
+        name = "Modrinth"
+        url = "https://api.modrinth.com/maven"
+        content {
+            includeGroup "maven.modrinth"
+        }
+    }
 }
 
 dependencies {
@@ -25,7 +32,6 @@ dependencies {
     // Optional optimization mods referenced for compatibility
     modCompileOnly "maven.modrinth:sodium:mc1.20.1-0.5.11"
     modCompileOnly "maven.modrinth:lithium:mc1.20.1-0.11.1"
-    modCompileOnly "maven.modrinth:phosphor:mc1.12.2-0.2.6" // placeholder for documentation
 
     // Client command API for benchmarking overlay toggles
     modImplementation "net.fabricmc.fabric-api:fabric-command-api-v2:0.92.1+1.20.1"

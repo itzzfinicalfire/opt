@@ -7,7 +7,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.GraphicsMode;
 import net.minecraft.client.option.GameOptions;
 import net.minecraft.client.option.ParticlesMode;
-import net.minecraft.client.util.Window;
 
 /**
  * Applies the core performance strategy: a low-end preset on launch and a
@@ -104,16 +103,19 @@ public class PerformanceController {
             return;
         }
         MinecraftClient client = MinecraftClient.getInstance();
-        Window window = client.getWindow();
-        double scale = window.getScaleFactor();
+        int currentScale = options.getGuiScale().getValue();
+        double targetScale = currentScale;
+
         if (fps < config.fpsFloor) {
-            scale = Math.max(0.75f, scale * scaleStep);
-        } else if (fps > config.fpsTarget && scale < window.calculateScaleFactor(client.options.getGuiScale().getValue(), client.forcesUnicodeFont())) {
-            scale = Math.min(scale * scaleStep, 2.0f);
+            targetScale = Math.max(1, Math.floor(currentScale * scaleStep));
+        } else if (fps > config.fpsTarget) {
+            targetScale = Math.min(4, Math.ceil(currentScale * scaleStep));
         }
-        if (Math.abs(scale - lastScale) > 0.05f) {
-            window.setScaleFactor(scale);
-            lastScale = (float) scale;
+
+        if (Math.abs(targetScale - lastScale) >= 1.0f) {
+            options.getGuiScale().setValue((int) targetScale);
+            lastScale = (float) targetScale;
+            client.onResolutionChanged();
         }
     }
 
