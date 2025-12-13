@@ -3,7 +3,8 @@
 A Fabric-based optimization mod that ships with aggressive low-end presets,
 dynamic FPS-aware scaling, and compatibility guidance for Sodium, Lithium, and
 Phosphor. The mod focuses on quick wins for laptops and older desktops while
-remaining modular for advanced users.
+remaining modular for advanced users. The default build now targets Minecraft
+**1.21.4** with Java 21, while remaining configurable for earlier releases.
 
 ## Features
 
@@ -26,7 +27,7 @@ systems.
 ## Project layout
 
 ```
-- build.gradle / settings.gradle : Fabric Loom configuration for 1.20.1 (Java 17)
+- build.gradle / settings.gradle : Fabric Loom configuration for 1.21.4 (Java 21)
 - src/main/java/com/finicalfirecooldown : Mod sources
 - src/main/resources/fabric.mod.json : Loader metadata
 ```
@@ -43,7 +44,7 @@ Artifacts appear in `build/libs/Finicalfirecooldown-<version>.jar`.
 
 ## Installation
 
-1. Install Fabric Loader (0.15.11+ recommended) and Fabric API matching your
+1. Install Fabric Loader (0.16.7+ recommended) and Fabric API matching your
    target game version.
 2. Drop the built JAR into the `mods/` directory.
 3. (Optional) Add Sodium, Lithium, or Phosphor to gain low-level improvements.
@@ -66,14 +67,16 @@ Key options:
 
 ## Version compatibility
 
-The code targets **Minecraft 1.20.1** with Java 17. To retarget earlier releases
-(1.16–1.19):
+The code targets **Minecraft 1.21.4** with Java 21. To retarget earlier
+releases (1.16–1.20.1):
 
-- Set `minecraft` and `fabric-api` versions in `build.gradle` to the desired
-  release pair and align the Fabric Loader version.
-- If building for Java 8/16 (older versions), adjust the toolchain entry in
-  `build.gradle` and any APIs that moved between releases. Most logic here uses
-  stable `GameOptions` getters that exist back to 1.16 with minimal renaming.
+- Set `minecraft_version`, `fabric_api_version`, and `fabric_loader_version`
+  in `gradle.properties` (or via `-P` overrides) to the desired release pair
+  and align the Fabric Loader version.
+- If building for Java 8/16/17 (older versions), adjust the `java_version`
+  property in `gradle.properties` and any APIs that moved between releases.
+  Most logic here uses stable `GameOptions` getters that exist back to 1.16
+  with minimal renaming.
 - Re-run `gradle build` to produce the versioned JAR.
 
 ## Recommended system presets

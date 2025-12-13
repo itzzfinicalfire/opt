@@ -1,14 +1,22 @@
 plugins {
-    id 'fabric-loom' version '1.6-SNAPSHOT'
+    id 'fabric-loom' version '1.7-SNAPSHOT'
     id 'java'
 }
 
 group = 'com.finicalfirecooldown'
-version = '0.1.0'
+version = '0.2.0'
 
 base {
     archivesName = 'Finicalfirecooldown'
 }
+
+def minecraftVersion = project.findProperty('minecraft_version') ?: '1.21.4'
+def fabricLoaderVersion = project.findProperty('fabric_loader_version') ?: '0.16.7'
+def fabricApiVersion = project.findProperty('fabric_api_version') ?: "0.114.0+${minecraftVersion}"
+def fabricCommandApiVersion = project.findProperty('fabric_command_api_version') ?: fabricApiVersion
+def javaVersion = Integer.parseInt(project.findProperty('java_version') ?: '21')
+def sodiumVersion = project.findProperty('sodium_version') ?: "mc${minecraftVersion}-0.6.0"
+def lithiumVersion = project.findProperty('lithium_version') ?: "mc${minecraftVersion}-0.12.0"
 
 repositories {
     mavenCentral()
@@ -24,28 +32,29 @@ repositories {
 }
 
 dependencies {
-    minecraft "com.mojang:minecraft:1.20.1"
+    minecraft "com.mojang:minecraft:${minecraftVersion}"
     mappings loom.officialMojangMappings()
-    modImplementation "net.fabricmc:fabric-loader:0.15.11"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:0.92.1+1.20.1"
+    modImplementation "net.fabricmc:fabric-loader:${fabricLoaderVersion}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabricApiVersion}"
 
-    // Optional optimization mods referenced for compatibility
-    modCompileOnly "maven.modrinth:sodium:mc1.20.1-0.5.11"
-    modCompileOnly "maven.modrinth:lithium:mc1.20.1-0.11.1"
+    // Optional optimization mods referenced for compatibility. These are compile-only
+    // to avoid bundling or requiring the dependencies at runtime.
+    modCompileOnly "maven.modrinth:sodium:${sodiumVersion}"
+    modCompileOnly "maven.modrinth:lithium:${lithiumVersion}"
 
     // Client command API for benchmarking overlay toggles
-    modImplementation "net.fabricmc.fabric-api:fabric-command-api-v2:0.92.1+1.20.1"
+    modImplementation "net.fabricmc.fabric-api:fabric-command-api-v2:${fabricCommandApiVersion}"
 }
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
+        languageVersion = JavaLanguageVersion.of(javaVersion)
     }
     withSourcesJar()
 }
 
 tasks.withType(JavaCompile).configureEach {
-    it.options.release = 17
+    it.options.release = javaVersion
     it.options.encoding = 'UTF-8'
 }
 
@@ -57,6 +66,8 @@ processResources {
     inputs.property "version", project.version
     filteringCharset = 'UTF-8'
     filesMatching("fabric.mod.json") {
-        expand "version": project.version
+        expand "version": project.version,
+                "minecraft_version": minecraftVersion,
+                "fabric_loader_version": fabricLoaderVersion
     }
 }

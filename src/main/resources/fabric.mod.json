@@ -17,10 +17,10 @@
     ]
   },
   "depends": {
-    "fabricloader": ">=0.15.11",
+    "fabricloader": ">=${fabric_loader_version}",
     "fabric": "*",
-    "minecraft": ["1.20.x"],
-    "java": ">=17"
+    "minecraft": ["1.21.x"],
+    "java": ">=21"
   },
   "suggests": {
     "sodium": "*",
