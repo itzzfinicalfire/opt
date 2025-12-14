@@ -1,0 +1,74 @@
+plugins {
+    id 'java'
+}
+
+def offlineMode = providers.gradleProperty('offline_mode').map { it.toBoolean() }.getOrElse(true)
+
+def minecraftVersion = project.findProperty('minecraft_version') ?: '1.21.4'
+def fabricLoaderVersion = project.findProperty('fabric_loader_version') ?: '0.16.7'
+def fabricApiVersion = project.findProperty('fabric_api_version') ?: "0.114.0+${minecraftVersion}"
+def fabricCommandApiVersion = project.findProperty('fabric_command_api_version') ?: fabricApiVersion
+def javaVersion = Integer.parseInt(project.findProperty('java_version') ?: '21')
+def sodiumVersion = project.findProperty('sodium_version') ?: "mc${minecraftVersion}-0.6.0"
+def lithiumVersion = project.findProperty('lithium_version') ?: "mc${minecraftVersion}-0.12.0"
+
+group = 'com.finicalfirecooldown'
+version = '0.2.0'
+
+base {
+    // Release artifact name requested for distribution builds
+    archivesName = 'OptimizebyFinii'
+}
+
+if (offlineMode) {
+    sourceSets.main.java.srcDir 'src/stubs/java'
+}
+
+repositories {
+    if (!offlineMode) {
+        mavenCentral()
+        maven { url = 'https://maven.fabricmc.net/' }
+        maven { url = 'https://jitpack.io' }
+        maven {
+            name = "Modrinth"
+            url = "https://api.modrinth.com/maven"
+            content {
+                includeGroup "maven.modrinth"
+            }
+        }
+    }
+}
+
+dependencies {
+    if (!offlineMode) {
+        implementation "com.mojang:minecraft:${minecraftVersion}"
+        implementation "net.fabricmc:fabric-loader:${fabricLoaderVersion}"
+        implementation "net.fabricmc.fabric-api:fabric-api:${fabricApiVersion}"
+        implementation "net.fabricmc.fabric-api:fabric-command-api-v2:${fabricCommandApiVersion}"
+        compileOnly "maven.modrinth:sodium:${sodiumVersion}"
+        compileOnly "maven.modrinth:lithium:${lithiumVersion}"
+    }
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(javaVersion)
+    }
+    withSourcesJar()
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.release = javaVersion
+    it.options.encoding = 'UTF-8'
+}
+
+processResources {
+    inputs.property "version", project.version
+    filteringCharset = 'UTF-8'
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version,
+                "minecraft_version": minecraftVersion,
+                "fabric_loader_version": fabricLoaderVersion
+    }
+}
+
