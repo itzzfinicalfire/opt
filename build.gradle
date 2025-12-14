@@ -16,7 +16,8 @@ group = 'com.finicalfirecooldown'
 version = '0.2.0'
 
 base {
-    archivesName = 'Finicalfirecooldown'
+    // Release artifact name requested for distribution builds
+    archivesName = 'OptimizebyFinii'
 }
 
 if (offlineMode) {

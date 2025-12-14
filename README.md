@@ -42,8 +42,11 @@ downloading Fabric Loom or Minecraft artifacts. To produce an offline jar:
 gradle build -x test
 ```
 
-Artifacts appear in `build/libs/Finicalfirecooldown-<version>.jar` along with a
+Artifacts appear in `build/libs/OptimizebyFinii-<version>.jar` along with a
 sources jar.
+
+> The packaged release JAR is intended to ship as `OptimizebyFinii.jar` for easy
+> drop-in installation.
 
 ### Switching to full Fabric dependencies
 
